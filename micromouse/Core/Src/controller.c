@@ -6,6 +6,9 @@
 #include "controller.h"
 #include "pid.h"
 
+const int turn90DegreeEncodingCount = 460;
+const int move1squareEncoderCount = 500;
+
 /*
  * We recommend you implement this function so that move(1) will move your rat 1 cell forward.
  */
@@ -19,10 +22,9 @@ void move(int8_t n) {
 	 *
 	 * You should also call resetPID before exiting this function so your rat is ready for the next instruction.
 	 */
-
-	/** TODO */
+	resetPID();
 	setPIDGoalA(0);
-	setPIDGoalD(n); // TODO
+	setPIDGoalD(n * move1squareEncoderCount);
 	while (!PIDdone());
 	resetPID();
 }
@@ -41,13 +43,9 @@ void turn(int8_t n) {
 	 *
 	 * You should also call resetPID before exiting this function so your rat is ready for the next instruction.
 	 */
-	/** TODO */
 	resetPID();
-	const int turn90DegreeEncodingCount = 460;
 	setPIDGoalA(n * turn90DegreeEncodingCount);
 	setPIDGoalD(0);
-
-	/** TODO: goes straight after making the turn for a while, then returns PIDdone */
 	while (!PIDdone());
 	resetPID();
 }

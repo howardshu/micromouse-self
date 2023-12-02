@@ -129,6 +129,7 @@ int main(void)
   HAL_Delay(500);
   turn(4);
   HAL_Delay(500);
+  move(4);
 
   /* USER CODE END 2 */
 

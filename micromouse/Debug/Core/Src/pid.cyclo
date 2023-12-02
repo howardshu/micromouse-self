@@ -1,6 +1,8 @@
-../Core/Src/pid.c:27:6:resetPID	1
-../Core/Src/pid.c:54:7:limitAngleCorrection	3
-../Core/Src/pid.c:63:6:updatePID	2
-../Core/Src/pid.c:114:6:setPIDGoalD	1
-../Core/Src/pid.c:122:6:setPIDGoalA	1
-../Core/Src/pid.c:130:8:PIDdone	1
+../Core/Src/pid.c:31:7:absol	2
+../Core/Src/pid.c:35:6:resetPID	1
+../Core/Src/pid.c:68:7:limitCorrection	3
+../Core/Src/pid.c:78:7:limitAccel	4
+../Core/Src/pid.c:92:6:updatePID	3
+../Core/Src/pid.c:143:6:setPIDGoalD	1
+../Core/Src/pid.c:151:6:setPIDGoalA	1
+../Core/Src/pid.c:159:8:PIDdone	1
