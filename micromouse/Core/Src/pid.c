@@ -6,18 +6,31 @@
 #include "motors.h"
 #include "encoders.h"
 
-int angleError = 0;
-int oldAngleError = 0;
-float distanceError = 0;
-float oldDistanceError = 0;
-float kPw = 0.1;
-float kDw = 0.05;
-float kPx = 1;
-float kDx = 0.5;
+// Parameters
+const float kPw = 0.01;
+const float kDw = 0;
+const float kPx = 0.001;
+const float kDx = 0;
+const float MAX_ACCEL = 0.005;
+const float ANGLE_CORRECTION_MAX = 0.3;
+const float DISTANCE_CORRECTION_MAX = 0.5;
+const float ERR_THRESHOLD = 25;
 
-int goalAngle = 0;
-int goalDistance = 0;
-int zeroErrorCount = 0;
+// Global Vars
+int angleError;
+int oldAngleError;
+int distanceError;
+int oldDistanceError;
+
+int goalAngle;
+int goalDistance;
+int zeroErrorCount;
+float oldLPWM;
+float oldRPWM;
+
+float absol(float input) {
+	return input < 0 ? -input : input;
+}
 
 void resetPID() {
     /*
@@ -31,11 +44,17 @@ void resetPID() {
      */
 	angleError = 0;
 	oldAngleError = 0;
+
 	distanceError = 0;
 	oldDistanceError = 0;
+
 	goalAngle = 0;
 	goalDistance = 0;
+
 	zeroErrorCount = 0;
+
+	oldLPWM = 0;
+	oldRPWM = 0;
 
 	// Reset motors and encoders
 	resetMotors();
@@ -46,14 +65,28 @@ void resetPID() {
 /*
  * This function should return PWM_MAX if pwm > PWM_MAX, -PWM_MAX if pwm < -PWM_MAX, and pwm otherwise.
  */
-const int ANGLE_CORRECTION_MAX = 0.8;
-float limitAngleCorrection(float angle) {
-//	if (angle > ANGLE_CORRECTION_MAX) {
-//		return ANGLE_CORRECTION_MAX;
-//	} else if (angle < -ANGLE_CORRECTION_MAX) {
-//		return -ANGLE_CORRECTION_MAX;
-//	}
-	return angle;
+float limitCorrection(const float pwm, const float limit) {
+	if (pwm > limit) {
+		return limit;
+	}
+	if (pwm < -limit) {
+		return -limit;
+	}
+	return pwm;
+}
+
+float limitAccel(const float pwm, float* oldPWM) {
+	// If new pwm value is too far from old pwm value
+	float newPWM;
+	if (pwm > *oldPWM) {
+		float maxPWM = *oldPWM + MAX_ACCEL;
+		newPWM = pwm > maxPWM ? maxPWM : pwm;
+	} else {
+		float minPWM = *oldPWM - MAX_ACCEL;
+		newPWM = pwm < minPWM ? minPWM : pwm;
+	}
+	*oldPWM = newPWM;
+	return newPWM;
 }
 
 void updatePID() {
@@ -75,33 +108,35 @@ void updatePID() {
      * right encoder counts. Refer to pseudocode example document on the google drive for some pointers.
      */
 	// Difference in left and right encoder counts
-	const int encoderCountDifference = getRightEncoderCounts() - getLeftEncoderCounts();
+	const int leftCount = getLeftEncoderCounts(), rightCount = getRightEncoderCounts();
+	const int encoderCountDifference = rightCount - leftCount;
+	const int encoderCountAverage = (rightCount + leftCount) / 2;
 
 	// how much more the right motor spins compared to left motor
 //	angleError = encoderCountDifference; // part 1
 	angleError = encoderCountDifference - goalAngle;
 	// positive if right motor spins more, negative if left motor spins more
-	float angleCorrection = kPw * angleError + kDw * (angleError - oldAngleError);
+	const float angleCorrection = limitCorrection(kPw * angleError + kDw * (angleError - oldAngleError), ANGLE_CORRECTION_MAX);
 //	float angleCorrection = kPw * angleError;
 	oldAngleError = angleError;
 
 //	distanceError = 0.5; // part 1
-	distanceError = (0.5 * encoderCountDifference) - goalDistance;
-	float distanceCorrection = kPx * distanceError + kDx * (distanceError - oldDistanceError);
+	distanceError = goalDistance - encoderCountAverage;
+	const float distanceCorrection = limitCorrection(kPx * distanceError + kDx * (distanceError - oldDistanceError), DISTANCE_CORRECTION_MAX);
 	oldDistanceError = distanceError;
 
 	// Set motor accordingly
-	setMotorLPWM(distanceCorrection + limitAngleCorrection(angleCorrection));
+	setMotorLPWM(limitAccel(distanceCorrection + angleCorrection, &oldLPWM));
 //	setMotorLPWM(1);
-	setMotorRPWM(distanceCorrection - limitAngleCorrection(angleCorrection));
+	setMotorRPWM(limitAccel(distanceCorrection - angleCorrection, &oldRPWM));
 //	setMotorRPWM(-1);
 
 
 	// If the error is close to 0, increment count
-	float errorThreshold = 10;
-	if ((angleError < 0 && angleError > -errorThreshold) ||
-			(angleError > 0 && angleError < errorThreshold)) {
+	if (absol(angleError) < ERR_THRESHOLD && absol(distanceError) < ERR_THRESHOLD) {
 		zeroErrorCount++;
+	} else {
+		zeroErrorCount = 0;
 	}
 }
 

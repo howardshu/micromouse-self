@@ -99,6 +99,10 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  // Wait until button is pressed
+  while (HAL_GPIO_ReadPin(Button_GPIO_Port, Button_Pin) == GPIO_PIN_SET);
+  HAL_Delay(200);
+
   MX_USART2_UART_Init();
   MX_TIM1_Init();
   MX_TIM2_Init();
@@ -115,9 +119,17 @@ int main(void)
   HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_4);
 
   // Set motors
-//  setMotorRPWM(0.5);
 //  setMotorLPWM(0.5);
+//  setMotorRPWM(-0.3);
+  turn(1);
+  HAL_Delay(500);
   turn(2);
+  HAL_Delay(500);
+  turn(3);
+  HAL_Delay(500);
+  turn(4);
+  HAL_Delay(500);
+  move(4);
 
   /* USER CODE END 2 */
 

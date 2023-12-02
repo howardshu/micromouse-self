@@ -10,8 +10,6 @@
 float limitPWM(float pwm) {
 	if (pwm > PWM_MAX) {
 		return PWM_MAX;
-	} else if (pwm < -PWM_MAX) {
-		return -PWM_MAX;
 	} else {
 		return pwm;
 	}
@@ -40,6 +38,7 @@ void setMotorLPWM(float pwm) {
 
 	// When pwm is smaller than 0, make left wheel spin backwards
 	else {
+		pwm = -pwm;
 		// Set the forward channel (3) to zero first
 		TIM4->CCR3 = 0;
 		// Set the backward channel (4) to non-zero
@@ -70,6 +69,7 @@ void setMotorRPWM(float pwm) {
 
 	// When pwm is smaller than 0, make right wheel spin backwards
 	else {
+		pwm = -pwm;
 		// Set the forward channel (1) to zero first
 		TIM4->CCR2 = 0;
 		// Set the backward channel (2) to non-zero
