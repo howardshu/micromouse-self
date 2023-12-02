@@ -6,18 +6,23 @@
 #include "motors.h"
 #include "encoders.h"
 
-int angleError = 0;
-int oldAngleError = 0;
-float distanceError = 0;
-float oldDistanceError = 0;
-float kPw = 0.1;
-float kDw = 0.05;
-float kPx = 1;
-float kDx = 0.5;
+// Parameters
+const float kPw = 0.1;
+const float kDw = 0.05;
+const float kPx = 1;
+const float kDx = 0.5;
 
-int goalAngle = 0;
-int goalDistance = 0;
-int zeroErrorCount = 0;
+const int ANGLE_CORRECTION_MAX = 0.8;
+
+// Global Vars
+int angleError;
+int oldAngleError;
+float distanceError;
+float oldDistanceError;
+
+int goalAngle;
+int goalDistance;
+int zeroErrorCount;
 
 void resetPID() {
     /*
@@ -46,7 +51,6 @@ void resetPID() {
 /*
  * This function should return PWM_MAX if pwm > PWM_MAX, -PWM_MAX if pwm < -PWM_MAX, and pwm otherwise.
  */
-const int ANGLE_CORRECTION_MAX = 0.8;
 float limitAngleCorrection(float angle) {
 //	if (angle > ANGLE_CORRECTION_MAX) {
 //		return ANGLE_CORRECTION_MAX;
