@@ -21,6 +21,10 @@ void move(int8_t n) {
 	 */
 
 	/** TODO */
+	setPIDGoalA(0);
+	setPIDGoalD(n); // TODO
+	while (!PIDdone());
+	resetPID();
 }
 
 /*
@@ -38,16 +42,12 @@ void turn(int8_t n) {
 	 * You should also call resetPID before exiting this function so your rat is ready for the next instruction.
 	 */
 	/** TODO */
-	const int turn90DegreeEncodingCount = 550;
-
+	resetPID();
+	const int turn90DegreeEncodingCount = 445;
 	setPIDGoalA(n * turn90DegreeEncodingCount);
 	setPIDGoalD(0);
 
 	/** TODO: goes straight after making the turn for a while, then returns PIDdone */
-	while (1) {
-		if (PIDdone()) {
-			break;
-		}
-	}
+	while (!PIDdone());
 	resetPID();
 }

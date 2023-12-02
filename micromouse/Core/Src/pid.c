@@ -7,22 +7,22 @@
 #include "encoders.h"
 
 // Parameters
-const float kPw = 0.1;
-const float kDw = 0.05;
-const float kPx = 1;
+const float kPw = 0.01;
+const float kDw = 0;
+const float kPx = 0.5;
 const float kDx = 0.5;
 
-const int ANGLE_CORRECTION_MAX = 0.8;
+const float ANGLE_CORRECTION_MAX = 0.4;
 
 // Global Vars
-int angleError;
-int oldAngleError;
-float distanceError;
-float oldDistanceError;
+int angleError = 0;
+int oldAngleError = 0;
+float distanceError = 0;
+float oldDistanceError = 0;
 
-int goalAngle;
-int goalDistance;
-int zeroErrorCount;
+int goalAngle = 0;
+int goalDistance = 0;
+int zeroErrorCount = 0;
 
 void resetPID() {
     /*
@@ -52,11 +52,11 @@ void resetPID() {
  * This function should return PWM_MAX if pwm > PWM_MAX, -PWM_MAX if pwm < -PWM_MAX, and pwm otherwise.
  */
 float limitAngleCorrection(float angle) {
-//	if (angle > ANGLE_CORRECTION_MAX) {
-//		return ANGLE_CORRECTION_MAX;
-//	} else if (angle < -ANGLE_CORRECTION_MAX) {
-//		return -ANGLE_CORRECTION_MAX;
-//	}
+	if (angle > ANGLE_CORRECTION_MAX) {
+		return ANGLE_CORRECTION_MAX;
+	} else if (angle < -ANGLE_CORRECTION_MAX) {
+		return -ANGLE_CORRECTION_MAX;
+	}
 	return angle;
 }
 
@@ -79,18 +79,19 @@ void updatePID() {
      * right encoder counts. Refer to pseudocode example document on the google drive for some pointers.
      */
 	// Difference in left and right encoder counts
-	const int encoderCountDifference = getRightEncoderCounts() - getLeftEncoderCounts();
+	const int leftCount = getLeftEncoderCounts(), rightCount = getRightEncoderCounts();
+	const int encoderCountDifference = rightCount - leftCount;
 
 	// how much more the right motor spins compared to left motor
 //	angleError = encoderCountDifference; // part 1
 	angleError = encoderCountDifference - goalAngle;
 	// positive if right motor spins more, negative if left motor spins more
-	float angleCorrection = kPw * angleError + kDw * (angleError - oldAngleError);
+	const float angleCorrection = kPw * angleError + kDw * (angleError - oldAngleError);
 //	float angleCorrection = kPw * angleError;
 	oldAngleError = angleError;
 
 //	distanceError = 0.5; // part 1
-	distanceError = (0.5 * encoderCountDifference) - goalDistance;
+	distanceError = goalDistance - 0.5 * (leftCount + rightCount);
 	float distanceCorrection = kPx * distanceError + kDx * (distanceError - oldDistanceError);
 	oldDistanceError = distanceError;
 
@@ -102,10 +103,11 @@ void updatePID() {
 
 
 	// If the error is close to 0, increment count
-	float errorThreshold = 10;
-	if ((angleError < 0 && angleError > -errorThreshold) ||
-			(angleError > 0 && angleError < errorThreshold)) {
+	float errorThreshold = 25;
+	if (abs(angleError) < errorThreshold) {
 		zeroErrorCount++;
+	} else {
+		zeroErrorCount = 0;
 	}
 }
 
