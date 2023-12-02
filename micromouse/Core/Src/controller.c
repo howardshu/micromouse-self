@@ -43,7 +43,7 @@ void turn(int8_t n) {
 	 */
 	/** TODO */
 	resetPID();
-	const int turn90DegreeEncodingCount = 445;
+	const int turn90DegreeEncodingCount = 460;
 	setPIDGoalA(n * turn90DegreeEncodingCount);
 	setPIDGoalD(0);
 

@@ -12,7 +12,7 @@ const float kDw = 0;
 const float kPx = 0.5;
 const float kDx = 0.5;
 
-const float ANGLE_CORRECTION_MAX = 0.4;
+const float ANGLE_CORRECTION_MAX = 0.3;
 
 // Global Vars
 int angleError = 0;

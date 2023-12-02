@@ -431,3 +431,22 @@ localhost:61234: Connection timed out.
 java.lang.Exception: localhost:61234: Connection timed out.
 	at org.eclipse.cdt.dsf.mi.service.command.AbstractMIControl$RxThread.processMIOutput(AbstractMIControl.java:1024)
 	at org.eclipse.cdt.dsf.mi.service.command.AbstractMIControl$RxThread.run(AbstractMIControl.java:853)
+!SESSION 2023-12-02 14:11:58.905 -----------------------------------------------
+eclipse.buildId=Version 1.13.2
+java.version=17.0.6
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_SG
+Framework arguments:  C:\Users\suziy\Desktop\workspace\micromouse\.project
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 C:\Users\suziy\Desktop\workspace\micromouse\.project
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2023-12-02 14:12:14.464
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2023-12-02 14:12:14.470
+!MESSAGE Log4j2 initialized with config file C:\Users\suziy\Desktop\workspace\.metadata\.log4j2.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2023-12-02 14:12:25.407
+!MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY org.eclipse.cdt.core 1 0 2023-12-02 14:12:29.113
+!MESSAGE Indexed 'micromouse' (27 sources, 116 headers) in 3.56 sec: 10,701 declarations; 58,102 references; 2 unresolved inclusions; 42 syntax errors; 147 unresolved names (0.21%)

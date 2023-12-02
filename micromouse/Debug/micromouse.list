@@ -1019,8 +1019,8 @@ void turn(int8_t n) {
 	/** TODO */
 	resetPID();
  8000c5a:	f000 fbc5 	bl	80013e8 <resetPID>
-	const int turn90DegreeEncodingCount = 445;
- 8000c5e:	f240 13bd 	movw	r3, #445	; 0x1bd
+	const int turn90DegreeEncodingCount = 460;
+ 8000c5e:	f44f 73e6 	mov.w	r3, #460	; 0x1cc
  8000c62:	60fb      	str	r3, [r7, #12]
 	setPIDGoalA(n * turn90DegreeEncodingCount);
  8000c64:	f997 3007 	ldrsb.w	r3, [r7, #7]
@@ -2378,7 +2378,7 @@ float limitAngleCorrection(float angle) {
  8001490:	46bd      	mov	sp, r7
  8001492:	f85d 7b04 	ldr.w	r7, [sp], #4
  8001496:	4770      	bx	lr
- 8001498:	3ecccccd 	.word	0x3ecccccd
+ 8001498:	3e99999a 	.word	0x3e99999a
 
 0800149c <updatePID>:
 
