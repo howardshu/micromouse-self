@@ -8,7 +8,7 @@
 
 // Parameters
 const float kPw = 0.01;
-const float kDw = 0.6;
+const float kDw = 0;
 const float kPx = 0.001;
 const float kDx = 0;
 const float MAX_ACCEL = 0.005;
