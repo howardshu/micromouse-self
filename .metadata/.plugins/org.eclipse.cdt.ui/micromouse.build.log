@@ -1,0 +1,17 @@
+15:26:06 **** Incremental Build of configuration Debug for project micromouse ****
+make -j16 all 
+arm-none-eabi-gcc "../Core/Src/pid.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F411xE -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/pid.d" -MT"Core/Src/pid.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/pid.o"
+arm-none-eabi-gcc -o "micromouse.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\suziy\Desktop\workspace\micromouse\STM32F411RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="micromouse.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: micromouse.elf
+ 
+arm-none-eabi-size   micromouse.elf 
+arm-none-eabi-objdump -h -S  micromouse.elf  > "micromouse.list"
+   text	   data	    bss	    dec	    hex	filename
+  15604	     20	   1892	  17516	   446c	micromouse.elf
+Finished building: default.size.stdout
+ 
+Finished building: micromouse.list
+ 
+
+15:26:07 Build Finished. 0 errors, 0 warnings. (took 550ms)
+
